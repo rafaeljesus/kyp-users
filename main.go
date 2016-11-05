@@ -11,6 +11,8 @@ import (
 	"os"
 )
 
+var KYP_USERS_PORT = os.Getenv("KYP_USERS_PORT")
+
 func main() {
 	db.Connect()
 	db.Repo.AutoMigrate(&models.User{})
@@ -25,8 +27,9 @@ func main() {
 	v1.GET("/healthz", handlers.HealthzIndex)
 	v1.POST("/users", handlers.UsersCreate)
 	v1.GET("/users/:id", handlers.UsersShow)
+	v1.POST("/users/authenticate", handlers.UsersAuthenticate)
 
-	log.Print("Starting Kyp Users Service...")
+	log.Print("Starting Kyp Users Service...", KYP_USERS_PORT)
 
-	e.Run(fasthttp.New(":" + os.Getenv("KYP_USERS_PORT")))
+	e.Run(fasthttp.New(":" + KYP_USERS_PORT))
 }

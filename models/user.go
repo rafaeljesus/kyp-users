@@ -28,6 +28,10 @@ func (u *User) FindById(id int) *gorm.DB {
 	return db.Repo.Find(&u, id)
 }
 
+func (u *User) FindByEmail(email string) *gorm.DB {
+	return db.Repo.Where("email = ?", email).Find(&u)
+}
+
 func (u *User) VerifyPassword(password string) (bool, error) {
 	return bcrypt.CompareHashAndPassword(u.EncryptedPassword, []byte(password)) == nil, nil
 }

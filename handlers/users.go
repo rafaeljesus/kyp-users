@@ -7,6 +7,8 @@ import (
 	"strconv"
 )
 
+const UNAUTHORIZED = "Unauthorized"
+
 func UsersCreate(c echo.Context) error {
 	user := models.User{}
 	if err := c.Bind(&user); err != nil {
@@ -22,10 +24,27 @@ func UsersCreate(c echo.Context) error {
 
 func UsersShow(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-
 	user := models.User{}
 	if err := user.FindById(id).Error; err != nil {
 		return err
+	}
+
+	return c.JSON(http.StatusOK, user)
+}
+
+func UsersAuthenticate(c echo.Context) error {
+	u := models.User{}
+	if err := c.Bind(&u); err != nil {
+		return err
+	}
+
+	user := models.User{}
+	if err := user.FindByEmail(u.Email).Error; err != nil {
+		return c.JSON(http.StatusUnauthorized, UNAUTHORIZED)
+	}
+
+	if invalid, _ := user.VerifyPassword(u.Password); !invalid {
+		return c.JSON(http.StatusUnauthorized, UNAUTHORIZED)
 	}
 
 	return c.JSON(http.StatusOK, user)
