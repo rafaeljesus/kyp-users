@@ -29,7 +29,7 @@ func main() {
 	v1.GET("/users/:id", handlers.UsersShow)
 	v1.POST("/users/authenticate", handlers.UsersAuthenticate)
 
-	log.Print("Starting Kyp Users Service at port", KYP_USERS_PORT)
+	log.Print("Starting Kyp Users Service at port ", KYP_USERS_PORT)
 
 	e.Run(fasthttp.New(":" + KYP_USERS_PORT))
 }
