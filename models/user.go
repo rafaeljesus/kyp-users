@@ -3,25 +3,24 @@ package models
 import (
 	"github.com/jinzhu/gorm"
 	"github.com/rafaeljesus/kyp-structs"
-	"github.com/rafaeljesus/kyp-users/db"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type User structs.User
 
-func (u *User) Create() *gorm.DB {
+func (repo *DB) CreateUser(u *User) *gorm.DB {
 	password := u.Password
 	u.Password = ""
 	u.EncryptedPassword, _ = bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	return db.Repo.Create(u)
+	return repo.Create(u)
 }
 
-func (u *User) FindById(id int) *gorm.DB {
-	return db.Repo.Find(&u, id)
+func (repo *DB) FindUserById(u *User, id int) *gorm.DB {
+	return repo.Find(&u, id)
 }
 
-func (u *User) FindByEmail(email string) *gorm.DB {
-	return db.Repo.Where("email = ?", email).Find(&u)
+func (repo *DB) FindUserByEmail(u *User, email string) *gorm.DB {
+	return repo.Where("email = ?", email).Find(&u)
 }
 
 func (u *User) VerifyPassword(password string) (bool, error) {
