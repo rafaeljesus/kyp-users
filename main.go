@@ -4,7 +4,7 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/engine/fasthttp"
 	"github.com/labstack/echo/middleware"
-	"github.com/rafaeljesus/kyp-users/api"
+	"github.com/rafaeljesus/kyp-users/handlers"
 	"github.com/rafaeljesus/kyp-users/models"
 	"log"
 	"os"
@@ -21,7 +21,7 @@ func main() {
 
 	db.AutoMigrate(&models.User{})
 
-	env := &api.Env{db}
+	env := &handlers.Env{db}
 
 	e := echo.New()
 	e.Use(middleware.Logger())
