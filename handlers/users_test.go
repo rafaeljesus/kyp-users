@@ -53,3 +53,16 @@ func TestUsersShow(t *testing.T) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 	}
 }
+
+func TestUsersAuthenticate(t *testing.T) {
+	response := `{"email":"foo@test.com", "password":"12345678"}`
+	e := echo.New()
+	req, _ := http.NewRequest(echo.POST, "/v1/users", strings.NewReader(response))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	ctx := e.NewContext(standard.NewRequest(req, e.Logger()), standard.NewResponse(rec, e.Logger()))
+
+	if assert.NoError(t, env.UsersAuthenticate(ctx)) {
+		assert.Equal(t, http.StatusOK, rec.Code)
+	}
+}
